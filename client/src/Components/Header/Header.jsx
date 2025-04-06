@@ -23,7 +23,7 @@ const Header = () => {
             <img src='https://tse2.mm.bing.net/th?id=OIP.bcTWKYpgWXmr91wiL4_ZBAHaHa&pid=Api&P=0&h=180' className='image-logo' alt='logo' />
         </li>
         <li className='list-elements'>
-            <Link to='/' className='link-header'>
+            <Link to='/home' className='link-header'>
             Home
             </Link>
         </li>

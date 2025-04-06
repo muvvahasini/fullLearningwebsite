@@ -1,59 +1,82 @@
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import axios from "axios";
+import Cookies from 'js-cookie';
+import './index.css';
 import Header from "../Header/Header";
-import "./index.css"; // <-- Add this import for the CSS
 
 const PlatformInterface = () => {
-  const [userInput, setUserInput] = useState("");
-  const [response, setResponse] = useState([]);
-  const [error, setError] = useState("");
+  const [customPrompt, setCustomPrompt] = useState("");
+  const [quizQuestions, setQuizQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState(1);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState('');
 
-  const jwtToken = Cookies.get("jwt_token");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!jwtToken) {
-      navigate("/login");
+  const handleGenerateQuestions = async (e) => {
+    e.preventDefault();
+    if (!customPrompt.trim()) {
+      setError('Please enter a prompt');
+      return;
     }
-  }, [jwtToken, navigate]);
-
-  const handleSend = async (event) => {
-    event.preventDefault();
-    if (!userInput.trim()) return;
 
     setLoading(true);
-    setResponse([]);
-    setError("");
+    setSaved(false);
+    const token = Cookies.get('jwt_token');
 
     try {
-      const res = await fetch("http://localhost:5000/api/platform/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwtToken}`,
-        },
-        body: JSON.stringify({ prompt: userInput }),
-      });
+      const res = await axios.post(
+        "http://localhost:7000/api/platform/create", // <- updated route
+        { prompt: customPrompt },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      const data = await res.json();
-      console.log("API Response:", data);
-
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to fetch quiz from server");
-      }
-
-      if (data.platform && Array.isArray(data.platform)) {
-        setResponse(data.platform);
-      } else {
-        setError("Unexpected response format from AI");
-      }
+      const platformQuestions = res.data.platform || [];
+      setQuizQuestions(platformQuestions);
+      setStep(2);
+      setError('');
     } catch (error) {
-      console.error("Error:", error);
-      setError(error.message || "Error fetching quiz from server");
-    } finally {
-      setLoading(false);
+      console.error("Error generating questions:", error);
+      setError('Failed to generate questions');
+    }
+    setLoading(false);
+  };
+
+  const handleSaveQuiz = async (e) => {
+    e.preventDefault();
+    const token = Cookies.get('jwt_token');
+
+    if (!token) {
+      setError('Authentication required');
+      return;
+    }
+
+    if (quizQuestions.length === 0) {
+      setError('No questions to save');
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        "http://localhost:7000/api/platform/save",
+        {
+          title: customPrompt,
+          questions: quizQuestions
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSaved(true);
+      setError('');
+    } catch (error) {
+      console.error("Error saving quiz:", error);
+      setError('Failed to save quiz');
     }
   };
 
@@ -61,50 +84,74 @@ const PlatformInterface = () => {
     <>
       <Header />
       <div className="platform-container">
-        <div className="platform-card">
-          <h2>Create Your Own Quiz</h2>
-          <textarea
-            className="platform-textarea"
-            rows="4"
-            placeholder="Ask for a quiz (e.g., 'create quiz for kids')..."
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-          ></textarea>
+        <div className="content-wrapper">
+          <h1 className="platform-title">🧠 Create an AI-Powered Quiz</h1>
+          <p className="platform-subtitle">Type a prompt like you're chatting with AI!</p>
 
-          <button
-            className="platform-button"
-            onClick={handleSend}
-            disabled={loading}
-          >
-            {loading ? "Generating..." : "Create Quiz"}
-          </button>
+          {step === 1 && (
+            <form onSubmit={handleGenerateQuestions} className="prompt-form">
+              <label className="prompt-label">Enter your prompt</label>
+              <div className="chatgpt-style-box">
+                <textarea
+                  className="chatgpt-prompt-textarea"
+                  placeholder="e.g., Create 15 multiple choice questions for Class 9 Chemistry - Acids, Bases, and Salts"
+                  value={customPrompt}
+                  onChange={(e) => setCustomPrompt(e.target.value)}
+                  rows={6}
+                />
+              </div>
+              <button
+                type="submit"
+                className="action-button purple-button"
+              >
+                {loading ? "Generating Quiz..." : "Generate Quiz"}
+              </button>
+              {error && <p className="error-text">{error}</p>}
+            </form>
+          )}
 
-          {error && <div className="platform-error">❌ {error}</div>}
-
-          {response.length > 0 && (
-            <div className="platform-response">
-              <h3>📝 Generated Quiz Questions</h3>
-              <ul>
-                {response.map((q, index) => (
-                  <li key={index}>
-                    <p>
-                      <strong>Q{index + 1}:</strong> {q.question}
+          {step === 2 && quizQuestions.length > 0 && !saved && (
+            <div className="questions-section">
+              <h2 className="section-title">Quiz Generated by AI</h2>
+              <form className="questions-form" onSubmit={handleSaveQuiz}>
+                {quizQuestions.map((q, index) => (
+                  <div key={index} className="question-item">
+                    <p className="question-text">
+                      {index + 1}. {q.question}
                     </p>
                     <ul className="options-list">
-                      {q.options.map((option, optIndex) => (
-                        <li
-                          key={optIndex}
-                          className={
-                            option === q.answer ? "correct-answer" : ""
-                          }
-                        >
-                          {option} {option === q.answer && "✔"}
-                        </li>
+                      {q.options.map((opt, i) => (
+                        <li key={i} className="option-item">{opt}</li>
                       ))}
                     </ul>
-                  </li>
+                    <p className="correct-answer">Correct Answer: {q.answer}</p>
+                  </div>
                 ))}
-              </ul>
+                <button
+                  type="submit"
+                  className="action-button green-button"
+                >
+                  Save Quiz
+                </button>
+                {error && <p className="error-text">{error}</p>}
+              </form>
+            </div>
+          )}
+
+          {saved && (
+            <div className="success-section">
+              <h2 className="success-title">🎉 Quiz Saved Successfully!</h2>
+              <button
+                className="action-button blue-button"
+                onClick={() => {
+                  setQuizQuestions([]);
+                  setCustomPrompt("");
+                  setSaved(false);
+                  setStep(1);
+                }}
+              >
+                Create Another Quiz
+              </button>
             </div>
           )}
         </div>

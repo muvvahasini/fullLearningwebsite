@@ -1,129 +1,213 @@
-.quiz-element-container{
-    display: flex;
-    flex-direction:row;
-    justify-content: flex-start;
-    align-items: center;
-    margin:10px;
-    padding-left:0px;
-    height: 100vh;
-}
-
-.radio-button-quiz{
-    height: 20px;
-    margin:10px;
-    margin-right:20px;
-    width: 20px;
-}
-
-.question-quiz{
-    align-self: flex-start;
-}
-
-
-.quiz-container{
-    display: flex;
-    flex-direction:row;
-    align-items: center;
-    justify-self: center;
-    height: 100vh;
-}
-
-.container-two-quiz{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.third-contianer-quiz{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.select-topic{
-    padding:10px;
-    border-radius: 5px;
-    margin:10px;
-    background-color: transparent;
-    outline:none;
-}
-
-
-.contianer-select-topic{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content:center;
-    height: 50vh;
-    
-}
-
-.topic-text{
-    margin:10px;
-    font-size: 20px;
-    color:#fff;
-}
-
-.button-element{
-    margin:10px;
-}
-
-.form-element{
-    display: flex;
-    flex-direction: column;
-    align-items:flex-start;
-    justify-self:center;
-}
-
-
-.label-element-quiz{
-    margin:0px;
-}
-
-.submit-button-container{
-    display: flex;
-    flex-direction: row;
-    align-items: center ;
+/* Dark Theme Base Styles */
+body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+  }
+  
+  .quiz-container {
+    padding: 16px;
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+  
+  .container-two-quiz {
+    background-color: #2d2d2d;
+    padding: 20px;
+    border-radius: 8px;
     width: 100%;
-    justify-content: center;
-}
-
-.option-element-quiz{
-    background-color:#000;
-    color: #eceaea;
-}
-
-.option-element-quiz:hover{
-    background-color: #fff;
-    color: #000;
-}
-
-.submit-button-element{
-    align-self: center !important;
-    justify-self: center;
-}
-
-.submit-button-element:hover{
-    outline: none;
-    border: none;
-}
-
-
-.require{
-    color:#920505;
-    font-size:20px;
-}
-
-
-.quiz-heading-main{
-    color:#fff;
-    font-size:32px;
-}
-
-.input-element-primary-one{
-    background-color: transparent;
-    outline: none;
-    border-radius:5px;
-    border:1px solid #4c4a4a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .quiz-heading-main {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    text-align: center;
+    color: #ffffff;
+  }
+  
+  .third-container-quiz {
+    margin-top: 20px;
+  }
+  
+  .form-inputs, .topic-selection, .quiz-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background-color: #3a3a3a;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .form-label, .topic-label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #ffffff;
+  }
+  
+  .input-field {
+    padding: 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    max-width: 300px;
+    background-color: #444;
+    color: #ffffff;
+  }
+  
+  .input-field::placeholder {
+    color: #aaa;
+  }
+  
+  .topic-dropdown {
+    padding: 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    max-width: 300px;
+    background-color: #444;
+    color: #ffffff;
+  }
+  
+  .dropdown-option {
+    padding: 8px;
+    font-size: 14px;
+    background-color: #444;
+    color: #ffffff;
+  }
+  
+  .dropdown-option:hover {
+    background-color: #555;
+  }
+  
+  .submit-button {
+    padding: 8px 16px;
+    border-radius: 4px;
     cursor: pointer;
-}
+    font-size: 14px;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .quiz-content {
+    margin-top: 24px;
+    align-self: flex-start;
+  }
+  
+  .quiz-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #ffffff;
+  }
+  
+  .question-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    justify-self: flex-start;
+    margin-left:5px;
+  }
+  
+  .question-text {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    margin-left:7px;
+    color: #ffffff;
+    align-self: flex-start;
+  }
+  
+  .option-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .radio-button {
+    margin:10px;
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+  }
+  
+  .option-label {
+    font-size: 14px;
+    color: #ffffff;
+    vertical-align: middle;
+  }
+  
+  .error-message {
+    color: #ff4444;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  
+  .result-container {
+    text-align: center;
+    margin-top: 24px;
+    padding: 20px;
+    background-color: #3a3a3a;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .result-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 16px;
+  }
+  
+  .result-message, .completion-message {
+    font-size: 16px;
+    font-style: italic;
+    margin-bottom: 8px;
+    color: #6f42c1;
+  }
+  
+  .completion-message {
+    color: #aaa;
+    margin-top: 8px;
+  }
+  
+  /* Button Colors (Dark Theme) */
+  .submit-button {
+    background-color: #007BFF;
+    color: white;
+    width: 20%;
+    align-self:center ;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .submit-button:nth-child(2) {
+    background-color: #6f42c1;
+  }
+  
+  .submit-button:nth-child(2):hover {
+    background-color: #5a2d91;
+  }
+  
+  .submit-button:nth-child(3) {
+    background-color: #28a745;
+  }
+  
+  .submit-button:nth-child(3):hover {
+    background-color: #1e7e34;
+  }
+  
+  .submit-button:last-child {
+    background-color: #007BFF;
+  }
+  
+  .submit-button:last-child:hover {
+    background-color: #0056b3;
+  }

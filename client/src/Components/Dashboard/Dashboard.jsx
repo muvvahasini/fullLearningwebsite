@@ -27,7 +27,7 @@ function Dashboard() {
       }
 
       try {
-        const response = await fetch('http://localhost:5000/api/dashboard', {
+        const response = await fetch('http://localhost:7000/api/dashboard', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${jwtToken}`,
